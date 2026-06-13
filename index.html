@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fart Counter 🌍💨</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 100px;
+    }
+    h1 {
+      font-size: 50px;
+    }
+    #count {
+      font-size: 40px;
+      margin: 20px;
+    }
+    button {
+      font-size: 30px;
+      padding: 20px 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🌍 Fart Counter</h1>
+  <div id="count">Loading...</div>
+  <button onclick="fart()">💨 FART</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, runTransaction, onValue }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    // 🔴 PUT YOUR FIREBASE CONFIG HERE
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const counterRef = ref(db, "fartCount");
+
+    // LIVE GLOBAL COUNT
+    onValue(counterRef, (snapshot) => {
+      document.getElementById("count").innerText =
+        Number(snapshot.val()).toLocaleString();
+    });
+
+    // CLICK TO INCREASE GLOBAL COUNT
+    window.fart = function () {
+      runTransaction(counterRef, (current) => {
+        return (current || 9000000000) + 1;
+      });
+    };
+  </script>
+</body>
+</html>
